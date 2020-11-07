@@ -1,0 +1,31 @@
+.cover-page {
+    width: 100%;
+    max-width: 100%;
+    height: 400px;
+    background: url("../../images/components/espacio.jpg");
+    background-attachment: fixed;
+    background-size: 200%;
+    background-position: left;
+    z-index: 1;
+    animation: movement 200s infinite linear alternate;
+}
+
+@keyframes movement {
+    from {
+      background-position: top left;
+    }
+    to {
+      background-position: bottom right;
+    }
+  }
+
+.title {
+    background-color: rgb(0,0,0,0.6);
+    width: 100%;
+    height: inherit;
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
