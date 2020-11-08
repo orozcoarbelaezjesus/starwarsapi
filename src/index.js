@@ -32,7 +32,7 @@ const enchancedFetch = (url, init) => {
 }
 
 const link = new HttpLink({
-  uri: 'http://localhost:63020',
+  uri: 'http://localhost:49495',
   // fetchOptions: {
   //   mode: 'no-cors',
   // },
@@ -53,7 +53,7 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <Page />
+    <Page client={client}/>
   </ApolloProvider>,
   document.getElementById('root')
 );
