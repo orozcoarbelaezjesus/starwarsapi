@@ -32,7 +32,7 @@ const enchancedFetch = (url, init) => {
 }
 
 const link = new HttpLink({
-  uri: 'http://localhost:63020',
+  uri: 'http://localhost:53257',
   // fetchOptions: {
   //   mode: 'no-cors',
   // },
