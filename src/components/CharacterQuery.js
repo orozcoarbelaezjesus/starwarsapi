@@ -8,60 +8,48 @@ import { Card, Typography } from "antd";
 
 const { Title } = Typography;
 
-export default class CharacterQuery extends React.Component {
+export function allPeople(client, first, last, after, before) {
+    const allPeopleQuery = gql`
+      query peoples($first: Int,$last: Int,$after: String,$before: String) {
+          allPeople(first:$first,last:$last,after: $after,before: $before) {
+            pageInfo {
+            hasNextPage,
+            hasPreviousPage,
+            startCursor,
+            endCursor,
+          },
+          totalCount,
+          people {
+            id
+            name
+            filmConnection{
+              films{
+                title
+                planetConnection{
+                  planets{
+                    name
+                  }
+                }
+                director
+                producers
+              }
+            }
+          }
+        },
+      }
+      `;
 
-  state = {
-    data: {}
-  }
-
-  // allPeople(client, after) {
-  //   const allPeopleQuery = gql`
-  //     query peoples($after: String!) {
-  //         allPeople(first:10,after: $after) {
-  //           pageInfo {
-  //           hasNextPage,
-  //           hasPreviousPage,
-  //           startCursor,
-  //           endCursor,
-  //         },
-  //         totalCount,
-  //         people {
-  //           id
-  //           name
-  //           filmConnection{
-  //             films{
-  //               title
-  //               planetConnection{
-  //                 planets{
-  //                   name
-  //                 }
-  //               }
-  //               director
-  //               producers
-  //             }
-  //           }
-  //         }
-  //       },
-  //     }
-  //     `;
-
-  //   client.query({
-  //     query: allPeopleQuery,
-  //     fetchPolicy: "network-only",
-  //     variables: {
-  //       after
-  //     }
-  //   })
-  //     .then(result => console.log(result.data))
-  // }
-
-  render() {
-    return (
-      <div>
-        {this.allPeople(this.props.client, "YXJyYXljb25uZWN0aW9uOjE5")}
-      </div>
-    )
-  }
+    return client.query({
+      query: allPeopleQuery,
+      fetchPolicy: "network-only",
+      variables: {
+        first,
+        last,
+        after,
+        before
+      }
+    })
+}
   // return (
   //     <Query query={gql`
   //         {
@@ -114,4 +102,3 @@ export default class CharacterQuery extends React.Component {
   //         }}
   //     </Query>
   // )
-}

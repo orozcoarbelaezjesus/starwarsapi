@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import 'antd/dist/antd.css';
-import { Modal, Button, Card, Typography } from 'antd';
+import { Modal, Button, Card, Tag, Typography } from 'antd';
 
-const { Title } = Typography
+const { Title, Text } = Typography
 
 const Window = (props) => {
 
@@ -20,23 +20,25 @@ const Window = (props) => {
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         width={1000}
+        className= "text-center"
+        bodyStyle={{backgroundColor: "slategrey", }}
       >
         <div className="row d-flex justify-content-center">
           {props.movies.map(movie => {
             return (
-              <Card style={{ width: 300 }} className="text-center mr-2 mt-2 col-12 col-md-4 col-lg-4 col-xl-4">
-                <h6>Movie Title</h6>
-                <Title level={4}>{movie.title}</Title>
-                <h6>Planets</h6>
+              <Card style={{ width: 300, backgroundColor: '#fffbfb'}} className="text-center mr-2 mt-2 col-12 col-md-4 col-lg-4 col-xl-4">
+                <Title level={4} style={{fontFamily: "monospace",margin: "10px"}}>Movie Title</Title>
+                <Text strong style={{fontSize: "16px"}}>{movie.title}</Text>
+                <Title level={4} style={{fontFamily: "monospace"}}>Planets</Title>
                 {movie.planetConnection.planets.map(planet => {
                   return (
-                    <p>{planet.name}</p>
+                    <Tag style={{marginBottom: '4px'}} color="geekblue">{planet.name}</Tag>
                   )
                 })}
-                <h6>Director</h6>
-                <p>{movie.director}</p>
-                <h6>Producers</h6>
-                <p>{movie.producers}</p>
+                <Title level={4} style={{fontFamily: "monospace",margin: "10px"}}>Director</Title>
+                <Text strong style={{fontSize: "16px"}}>{movie.director}</Text>
+                <Title level={4} style={{fontFamily: "monospace"}}>Producers</Title>
+                <Text strong style={{fontSize: "16px"}}>{movie.producers}</Text>
               </Card>
             )
           })}
