@@ -1,6 +1,6 @@
 import React from "react";
 import "./styles/CharacterList.css";
-import { Typography, Pagination } from "antd";
+import { Typography, Pagination, Divider } from "antd";
 import 'antd/dist/antd.css';
 import { allPeople } from "./CharacterQuery";
 import Characters from "./Characters";
@@ -52,11 +52,13 @@ loadPeople(page){
   } 
   allPeople(this.props.client,first,last,after,before)
     .then(result => {
-      console.log(result.data)
       this.setState({
         data: result.data,
         actualPage: page
       })
+    })
+    .catch(error => {
+      return <h1>{Error}</h1>
     })
 }
 
@@ -64,14 +66,12 @@ render(){
   let charactersComponent = null;
   if (Object.keys(this.state.data).length === 0) {
     charactersComponent = null
-    console.log("IF")
   } else {
-    console.log("Else")
     charactersComponent = <Characters data={this.state.data} />
   }
   return (
     <div className="character-list text-center font-italic">
-      <Title level={1}>Characters</Title>
+      <Divider><Title level={3} style={{fontFamily: "monospace"}}>Characters</Title></Divider>
       {charactersComponent}
       <Pagination simple defaultCurrent={1} total={82} onChange={this.handleChange} />
     </div>

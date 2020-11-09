@@ -7,7 +7,7 @@
     background-size: 200%;
     background-position: left;
     z-index: 1;
-    animation: movement 200s infinite linear alternate;
+    animation: movement 190s infinite linear alternate;
 }
 
 @keyframes movement {
@@ -19,7 +19,7 @@
     }
   }
 
-.title {
+.container-logo {
     background-color: rgb(0,0,0,0.6);
     width: 100%;
     height: inherit;
@@ -28,4 +28,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.logo {
+    width: 400px
+}
+
+/* Media Queries */
+
+@media (max-width:450px){
+  .logo{
+    width:200px;
+  }
+}
+
+@media (max-height:450px){
+  .cover-page{
+    height: 290px
+  }
 }
