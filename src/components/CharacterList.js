@@ -1,90 +1,79 @@
 import React from "react";
-import Loader from "./Loader";
-import Window from "./Window";
 import "./styles/CharacterList.css";
-import { gql } from "apollo-boost";
-import { Query } from "react-apollo";
-import { Card, Typography, Pagination } from "antd";
+import { Typography, Pagination, Divider } from "antd";
 import 'antd/dist/antd.css';
-
+import { allPeople } from "./CharacterQuery";
+import Characters from "./Characters";
 const { Title } = Typography;
 
 export default class CharacterList extends React.Component {
-
-  // handleChange = (defaultCurrent) => {
-  //   this.setState({
-  //     actualPage: defaultCurrent
-  //   })
-  // }
-
-  paginar = (page, pageSize) => {
-    console.log("Esto trae page: ",page)
-    console.log("Esto trae pageSize: ",pageSize)
-    this.render()
+  constructor(props) {
+    super(props)
+    this.loadPeople(1)
   }
 
-  charactersQuery = ({ after }) => {
-    return (
-      <Query variables={{ after }} query={gql`
-          query allCharacters($after: String){
-              allPeople(first: 10,after: $after) {
-                pageInfo {
-                hasNextPage,
-                hasPreviousPage,
-                startCursor,
-                endCursor,
-              },
-              totalCount,
-              people {
-                id
-                name
-                filmConnection{
-                  films{
-                    title
-                    planetConnection{
-                      planets{
-                        name
-                      }
-                    }
-                    director
-                    producers
-                  }
-                }
-              }
-            },
-          }
-        `}>
-        {({ loading, error, data }) => {
-          if (loading) return <Loader />
-          if (error) return <p>Error</p>
-          
-          return (
-            <div className="row d-flex justify-space-around">
-              {data.allPeople.people.map(character => {
-                return (
-                  <Card style={{ width: 300 }} className="text-center mt-2 col-12" key={character.id}>
-                    <Title level={4}>{character.name}</Title>
-                    <Window
-                      title={character.name}
-                      movies={character.filmConnection.films}
-                    />
-                  </Card>
-                )
-              })}
-            </div>
-          )
-        }}
-      </Query>
-    )
+  state = {
+    actualPage: 1,
+    data: {}
   }
 
-  render(){
-    return (
-      <div className="character-list text-center font-italic">
-        <Title level={1}>Characters</Title>
-            <CharactersQuery />
-        <Pagination simple defaultCurrent={1} total={82} onChange={this.paginar}/>
-      </div>
-    )
+handleChange = (page, pageSize) => {
+  this.loadPeople(page)
+}
+
+loadPeople(page){
+  let first
+  let last
+  let after
+  let before
+  if(this.state.actualPage===page){
+    first=10
+    last=null
+    after=""
+    before=""
+  } else{
+    if(this.state.actualPage<page){
+      after=this.state.data.allPeople.pageInfo.endCursor
+      before=""
+      if(page===9){
+        first=2
+        last=null
+      } else {
+        first=10
+        last=null
+      }
+    } else{
+      first=null
+      last=10
+      after=""
+      before=this.state.data.allPeople.pageInfo.startCursor
+    }
+  } 
+  allPeople(this.props.client,first,last,after,before)
+    .then(result => {
+      this.setState({
+        data: result.data,
+        actualPage: page
+      })
+    })
+    .catch(error => {
+      return <h1>{Error}</h1>
+    })
+}
+
+render(){
+  let charactersComponent = null;
+  if (Object.keys(this.state.data).length === 0) {
+    charactersComponent = null
+  } else {
+    charactersComponent = <Characters data={this.state.data} />
   }
+  return (
+    <div className="character-list text-center font-italic">
+      <Divider><Title level={3} style={{fontFamily: "monospace"}}>Characters</Title></Divider>
+      {charactersComponent}
+      <Pagination simple defaultCurrent={1} total={82} onChange={this.handleChange} />
+    </div>
+  )
+}
 }
